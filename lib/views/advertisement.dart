@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:olx/main.dart';
 import 'package:olx/models/add.dart';
 import 'package:olx/views/widgets/item_add.dart';
 
@@ -109,6 +110,16 @@ class _AdvertisementState extends State<Advertisement> {
 
   @override
   Widget build(BuildContext context) {
+
+    var loadingData = Center(
+      child: Column(children: const [
+
+        Text('Carregando anúncios'),
+        CircularProgressIndicator()
+
+      ],),
+    )
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('OLX'),
@@ -130,7 +141,7 @@ class _AdvertisementState extends State<Advertisement> {
                   child: DropdownButtonHideUnderline(
                     child: Center(
                       child: DropdownButton(
-                        iconEnabledColor: const Color(0xff9c27b0),
+                        iconEnabledColor: defaultThemeAndroid.colorScheme.primary,
                         value: _selectedItemEstado,
                         items: _listItemsDropEstados,
                         style: const TextStyle(
@@ -158,7 +169,7 @@ class _AdvertisementState extends State<Advertisement> {
                   child: DropdownButtonHideUnderline(
                     child: Center(
                       child: DropdownButton(
-                        iconEnabledColor: const Color(0xff9c27b0),
+                        iconEnabledColor: defaultThemeAndroid.colorScheme.primary,
                         value: _selectedItemCategorie,
                         items: _listItemsDropCategories,
                         style: const TextStyle(
@@ -185,6 +196,7 @@ class _AdvertisementState extends State<Advertisement> {
 
                 case ConnectionState.none:
                 case ConnectionState.waiting:
+                  return loadingData;
                 case ConnectionState.active:
                 case ConnectionState.done:
 
@@ -218,7 +230,8 @@ class _AdvertisementState extends State<Advertisement> {
                               onTapItem: () {
                                   Navigator.pushNamed(
                                       context,
-                                      '/details-add'
+                                      '/details-add',
+                                    arguments: add
                                   );
                               },
                             );
