@@ -3,6 +3,9 @@ import 'package:olx/views/advertisement.dart';
 import 'package:olx/views/login.dart';
 import 'package:olx/views/my_adds.dart';
 import 'package:olx/views/new_add.dart';
+import 'package:olx/views/widgets/details_add.dart';
+
+import 'models/add.dart';
 
 class RouteGenerator {
   static Route<dynamic>? generateRoute(RouteSettings settings) {
@@ -17,6 +20,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const MyAdds());
       case '/new-add':
         return MaterialPageRoute(builder: (_) => const NewAdd());
+      case '/details-add':
+        return MaterialPageRoute(builder: (_) => DetailsAdd(add: args as Add,));
       default:
         _errorRoute();
     }

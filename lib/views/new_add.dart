@@ -12,6 +12,8 @@ import 'dart:io';
 
 import 'package:validadores/Validador.dart';
 
+import '../util/configurations.dart';
+
 class NewAdd extends StatefulWidget {
   const NewAdd({Key? key}) : super(key: key);
 
@@ -21,8 +23,8 @@ class NewAdd extends StatefulWidget {
 
 class _NewAddState extends State<NewAdd> {
   final List<File> _imagesList = [];
-  final List<DropdownMenuItem<String>> _listItemsDropEstados = [];
-  final List<DropdownMenuItem<String>> _listItemsDropCategories = [];
+  late List<DropdownMenuItem<String>> _listItemsDropEstados = [];
+  late List<DropdownMenuItem<String>> _listItemsDropCategories = [];
   final _formKey = GlobalKey<FormState>();
   // TextEditingController controller = TextEditingController();
   Add? _add;
@@ -116,27 +118,10 @@ class _NewAddState extends State<NewAdd> {
   }
 
   _loadItemsDropdown() {
-    const categories = {
-      'Automóvel': 'auto',
-      'Imóvel': 'imovel',
-      'Eletrônicos': 'eletro',
-      'Moda': 'moda',
-      'Esportes': 'esportes',
-    };
 
-    categories.forEach((key, value) {
-      _listItemsDropCategories.add(DropdownMenuItem(
-        value: value,
-        child: Text(key),
-      ));
-    });
+    _listItemsDropCategories = Configurations.getCategories();
 
-    for (var estado in Estados.listaEstadosSigla) {
-      _listItemsDropEstados.add(DropdownMenuItem(
-        value: estado,
-        child: Text(estado),
-      ));
-    }
+    _listItemsDropEstados = Configurations.getEstados();
   }
 
   @override
