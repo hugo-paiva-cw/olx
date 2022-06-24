@@ -36,17 +36,8 @@ class _DetailsAddState extends State<DetailsAdd> {
     var filtered = phone.replaceAll('-', '');
     filtered = phone.replaceAll('(', '');
     filtered = phone.replaceAll(')', '');
-    var itCanLaunch = await canLaunchUrl(Uri(
-      scheme: 'tel',
-      path: filtered
-    ));
 
-    if (true) {
-      await launchUrlString('tel:$filtered');
-      print('o filttrado é $filtered');
-    } else {
-      print('Não pode fazer a ligação');
-    }
+    await launchUrlString('tel:$filtered');
   }
 
   @override

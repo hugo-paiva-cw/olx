@@ -74,9 +74,11 @@ class _MyAddsState extends State<MyAdds> {
       appBar: AppBar(
         title: const Text('Meus anúncios'),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
         foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
+        label: const Text('Adicionar'),
         onPressed: () {
           Navigator.pushNamed(context, '/new-add');
         },

@@ -138,6 +138,14 @@ class _LoginState extends State<Login> {
                         _validateFields();
                       },
                   ),
+                  
+                  FlatButton(
+                      onPressed: (){
+                        Navigator.pushReplacementNamed(context, '/');
+                      },
+                      child: const Text('Ir para anúncios')
+                  ),
+                  
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: Text(
