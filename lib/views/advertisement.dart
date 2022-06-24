@@ -118,7 +118,7 @@ class _AdvertisementState extends State<Advertisement> {
         CircularProgressIndicator()
 
       ],),
-    )
+    );
 
     return Scaffold(
       appBar: AppBar(
