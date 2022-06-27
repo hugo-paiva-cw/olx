@@ -1,6 +1,7 @@
 # olx
 
-A new Flutter project.
+14th exercise-app with the objective of reproducing OLX marketplace interface and functionality.
+It was implemented Bloc in the dropdown menu categories from the user page for adding new products for sale.
 
 ## Getting Started
 
