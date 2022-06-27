@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:olx/bloc/item_bloc.dart';
 import 'package:olx/models/add.dart';
 import 'package:olx/views/widgets/button_customized.dart';
 import 'package:olx/views/widgets/input_customized.dart';
@@ -12,6 +13,8 @@ import 'dart:io';
 
 import 'package:validadores/Validador.dart';
 
+import '../bloc/item_event.dart';
+import '../bloc/item_state.dart';
 import '../util/configurations.dart';
 
 class NewAdd extends StatefulWidget {
@@ -22,6 +25,10 @@ class NewAdd extends StatefulWidget {
 }
 
 class _NewAddState extends State<NewAdd> {
+  // Using Bloc
+  late final ItemBloc bloc;
+
+
   final List<File> _imagesList = [];
   late List<DropdownMenuItem<String>> _listItemsDropEstados = [];
   late List<DropdownMenuItem<String>> _listItemsDropCategories = [];
@@ -115,6 +122,16 @@ class _NewAddState extends State<NewAdd> {
     _loadItemsDropdown();
 
     _add = Add.generateId();
+
+    // Using bloc
+    bloc = ItemBloc();
+    bloc.inputItem.add(LoadItemEvent());
+  }
+
+  @override
+  void dispose() {
+    bloc.inputItem.close();
+    super.dispose();
   }
 
   _loadItemsDropdown() {
@@ -274,21 +291,46 @@ class _NewAddState extends State<NewAdd> {
                     Expanded(
                       child: Padding(
                           padding: const EdgeInsets.all(8),
-                          child: DropdownButtonFormField<String>(
-                            hint: const Text('Categoria'),
-                            onSaved: (categorie) {
-                              _add?.categorie = categorie!;
-                            },
-                            style: const TextStyle(
-                                color: Colors.black, fontSize: 20),
-                            items: _listItemsDropCategories,
-                            validator: (value) {
-                              return Validador()
-                                  .add(Validar.OBRIGATORIO,
-                                      msg: 'Campo obrigatório')
-                                  .valido(value);
-                            },
-                            onChanged: (value) {},
+                          child: StreamBuilder<ItemState>(
+                            stream: bloc.stream,
+                              builder: (context, AsyncSnapshot<ItemState> snapshot){
+
+                                final itemListDropEstados = snapshot.data?.items ?? [];
+
+                                List<DropdownMenuItem<String>> itemsDropCategories = [];
+
+                                itemsDropCategories.add(const DropdownMenuItem(
+                                  value: null,
+                                  child: Text(
+                                    'Categoria',
+                                    style: TextStyle(color: Color(0xff9c27b0)),
+                                  ),
+                                ));
+
+                                itemListDropEstados.forEach((item) {
+                                  itemsDropCategories.add(DropdownMenuItem(
+                                    value: item.valor,
+                                    child: Text(item.nome),
+                                  ));
+                                });
+
+                                return DropdownButtonFormField<String>(
+                                  hint: const Text('Categoria'),
+                                  onSaved: (categorie) {
+                                    _add?.categorie = categorie!;
+                                  },
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 20),
+                                  items: itemsDropCategories,
+                                  validator: (value) {
+                                    return Validador()
+                                        .add(Validar.OBRIGATORIO,
+                                        msg: 'Campo obrigatório')
+                                        .valido(value);
+                                  },
+                                  onChanged: (value) {},
+                                );
+                              }
                           )),
                     ),
                   ],
