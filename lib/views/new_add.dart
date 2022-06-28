@@ -125,12 +125,12 @@ class _NewAddState extends State<NewAdd> {
 
     // Using bloc
     bloc = ItemBloc();
-    bloc.inputItem.add(LoadItemEvent());
+    bloc.add(LoadItemEvent());
   }
 
   @override
   void dispose() {
-    bloc.inputItem.close();
+    bloc.close();
     super.dispose();
   }
 

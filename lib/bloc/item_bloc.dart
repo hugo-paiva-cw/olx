@@ -1,33 +1,23 @@
-import 'dart:async';
+import 'package:bloc/bloc.dart';
 import 'package:olx/bloc/item_state.dart';
-import 'item.dart';
 import 'item_event.dart';
 import 'package:olx/bloc/item_repo.dart';
 
-class ItemBloc {
+class ItemBloc extends Bloc<ItemEvent, ItemState> {
   final _itemRepo = ItemRepository();
 
-  final StreamController<ItemEvent> _inputItemController = StreamController<ItemEvent>();
+  ItemBloc() : super(ItemInitialState()) {
+    on<LoadItemEvent>(
+        (event, emit) => emit(ItemSuccessState(items: _itemRepo.loadItems())),
+    );
 
-  final StreamController<ItemState> _outputItemController = StreamController<ItemState>();
+    on<AddItemEvent>(
+        (event, emit) => emit(ItemSuccessState(items: _itemRepo.addItem(event.item)))
+    );
 
-  Sink<ItemEvent> get inputItem => _inputItemController.sink;
-  Stream<ItemState> get stream => _outputItemController.stream;
-
-  ItemBloc() {
-    _inputItemController.stream.listen(_mapEventToState);
-  }
-
-  _mapEventToState(ItemEvent event) {
-    List<Item> items = [];
-    if (event is LoadItemEvent) {
-      items = _itemRepo.loadItems();
-    } else if ( event is AddItemEvent ) {
-      items = _itemRepo.addItem(event.item);
-    } else if (event is RemoveItemEvent) {
-      items = _itemRepo.removeItem(event.item);
-    }
-    _outputItemController.add(ItemSuccessState(items: items));
+    on<RemoveItemEvent>(
+            (event, emit) => emit(ItemSuccessState(items: _itemRepo.removeItem(event.item)))
+    );
   }
 
 }
